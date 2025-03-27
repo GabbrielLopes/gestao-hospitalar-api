@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gestao-hospitalar-api
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:  jdbc:mysql://localhost:3306/ghospitalar?useTimezone=true&serverTimezone=UTC
+    username: admin
+    password: admin
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
