@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -14,11 +15,13 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @Entity
+@SequenceGenerator(name = "PACIENTE_SEQ", sequenceName = "PACIENTE_SEQ", allocationSize = 1)
 @Table(name = "PACIENTE")
-public class Peciente {
+public class Paciente {
 
     @Id
     @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PACIENTE_SEQ")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -30,6 +33,12 @@ public class Peciente {
 
     @Column(name = "ATIVO", nullable = false)
     private Boolean ativo;
+
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY)
+    private List<Consulta> consultas;
+
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY)
+    private List<Exame> exames;
 
 
     @Column(name = "DTHR_CRIACAO", nullable = false)

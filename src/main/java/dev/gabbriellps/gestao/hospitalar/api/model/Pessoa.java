@@ -1,9 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
+@SequenceGenerator(name = "PESSOA_SEQ", sequenceName = "PESSOA_SEQ", allocationSize = 1)
 @Table(name = "PESSOA")
 public class Pessoa {
 
     @Id
     @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PESSOA_SEQ")
     private Long id;
 
     @Column(name = "NOME", nullable = false, length = 150)
