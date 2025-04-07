@@ -1,10 +1,13 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.PessoaResponseDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +51,7 @@ public class Paciente {
 
     @PrePersist
     protected void onCreate() {
+        ativo = true;
         if (Objects.isNull(dataCriacao)) {
             dataCriacao = LocalDateTime.now();
         }
@@ -59,6 +63,35 @@ public class Paciente {
         if (Objects.nonNull(dataCriacao)) {
             dataAtualizacao = LocalDateTime.now();
         }
+    }
+
+
+    public static PacienteResponseDTO mapToPacienteResponseDTO(Paciente paciente) {
+        return new ModelMapper().map(paciente, PacienteResponseDTO.class);
+    }
+
+    public PacienteResponseDTO toPacienteResponseDTO() {
+
+        PessoaResponseDTO pessoaResponseDTO = new ModelMapper().map(pessoa, PessoaResponseDTO.class);
+
+        return PacienteResponseDTO.builder()
+                .id(id)
+                .pessoa(pessoaResponseDTO)
+                .historicoClinico(historicoClinico)
+                .ativo(ativo)
+                .consultas(consultas)
+                .exames(exames)
+                .dataCriacao(dataCriacao)
+                .dataAtualizacao(dataAtualizacao)
+                .build();
+    }
+
+    public void inativar() {
+        ativo = false;
+    }
+
+    public void ativar() {
+        ativo = true;
     }
 
 }
