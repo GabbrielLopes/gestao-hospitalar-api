@@ -19,4 +19,6 @@ public interface PacienteService {
 
     void ativarPaciente(Long id) throws VidaPlusServiceException;
 
+    PacienteResponseDTO editarPaciente(Long id, PacienteRequestDTO requestDTO) throws VidaPlusServiceException;
+
 }

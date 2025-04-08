@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.Sexo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +29,8 @@ public class Pessoa {
     private String nome;
 
     @Column(name = "SEXO", nullable = false, length = 1)
-    private String sexo;
+    @Enumerated(STRING)
+    private Sexo sexo;
 
     @Column(name = "DT_NASCIMENTO", nullable = false)
     private LocalDate dataNascimento;

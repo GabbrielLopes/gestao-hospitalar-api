@@ -61,6 +61,21 @@ public class PacienteServiceImplPessoa extends PessoaAbstractService implements 
 
     @Override
     @Transactional
+    public PacienteResponseDTO editarPaciente(Long id, PacienteRequestDTO requestDTO) throws VidaPlusServiceException {
+        Paciente paciente = retornaPacientePorId(id);
+
+        try {
+            paciente.atualizaDadosPessoa(requestDTO);
+
+            return repository.saveAndFlush(paciente).toPacienteResponseDTO();
+        } catch (DataAccessException | HibernateException e){
+            log.error("Erro ao editar paciente - ", e);
+            throw new VidaPlusServiceException("Erro ao editar paciente", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional
     public void inativarPaciente(Long id) throws VidaPlusServiceException {
         Paciente paciente = retornaPacientePorId(id);
         paciente.inativar();

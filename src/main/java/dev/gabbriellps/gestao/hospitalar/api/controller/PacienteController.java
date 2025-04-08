@@ -41,14 +41,13 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.cadastrarPaciente(requestDTO));
     }
 
-//    @PutMapping
-//    public ResponseEntity<PacienteResponseDTO> editarPaciente(
-//            @Valid @RequestBody PacienteRequestDTO requestDTO
-//    ) throws VidaPlusServiceException {
-//
-//
-//        return ResponseEntity.ok(pacienteService.editarPaciente(requestDTO));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<PacienteResponseDTO> editarPaciente(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody PacienteRequestDTO requestDTO
+    ) throws VidaPlusServiceException {
+        return ResponseEntity.ok(pacienteService.editarPaciente(id, requestDTO));
+    }
 
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,7 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.PacienteRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.PessoaRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.PessoaResponseDTO;
 import jakarta.persistence.*;
@@ -77,10 +79,7 @@ public class Paciente {
         return PacienteResponseDTO.builder()
                 .id(id)
                 .pessoa(pessoaResponseDTO)
-                .historicoClinico(historicoClinico)
                 .ativo(ativo)
-                .consultas(consultas)
-                .exames(exames)
                 .dataCriacao(dataCriacao)
                 .dataAtualizacao(dataAtualizacao)
                 .build();
@@ -94,4 +93,17 @@ public class Paciente {
         ativo = true;
     }
 
+    public void atualizaDadosPessoa(PacienteRequestDTO requestDTO) {
+        PessoaRequestDTO pessoaRequest = requestDTO.getPessoa();
+
+        pessoa.setNome(pessoaRequest.getNome());
+        pessoa.setSexo(pessoaRequest.getSexo());
+        pessoa.setDataNascimento(pessoaRequest.getDataNascimento());
+        pessoa.setCpf(pessoaRequest.getCpf());
+        pessoa.setCep(pessoaRequest.getCep());
+        pessoa.setEndereco(pessoaRequest.getEndereco());
+        pessoa.setComplemento(pessoaRequest.getComplemento());
+        pessoa.setTelefone(pessoaRequest.getTelefone());
+        pessoa.setEmail(pessoaRequest.getEmail());
+    }
 }

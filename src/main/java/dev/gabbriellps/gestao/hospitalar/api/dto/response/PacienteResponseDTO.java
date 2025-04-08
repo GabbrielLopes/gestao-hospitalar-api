@@ -22,11 +22,7 @@ public class PacienteResponseDTO {
 
     private Long id;
     private PessoaResponseDTO pessoa;
-    private String historicoClinico;
     private Boolean ativo;
-    private List<Consulta> consultas;
-    private List<Exame> exames;
-
 
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
