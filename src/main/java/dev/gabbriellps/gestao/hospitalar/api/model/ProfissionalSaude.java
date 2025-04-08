@@ -1,11 +1,13 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;

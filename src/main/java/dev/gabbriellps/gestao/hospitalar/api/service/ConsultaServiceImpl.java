@@ -1,6 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.service;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ConsultaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ public class ConsultaServiceImpl implements ConsultaService {
 
 
     @Override
-    public List<ConsultaDTO> listarConsultas() {
+    public List<ConsultaResponseDTO> listarConsultas() {
 
         return null;
     }
 
     @Override
-    public ConsultaDTO atualizarConsulta(Long id, ConsultaDTO consultaDTO) {
+    public ConsultaResponseDTO atualizarConsulta(Long id, ConsultaResponseDTO consultaResponseDTO) {
         return null;
     }
 

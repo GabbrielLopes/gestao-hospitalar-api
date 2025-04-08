@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.gabbriellps.gestao.hospitalar.api.model.Consulta;
 import dev.gabbriellps.gestao.hospitalar.api.model.Exame;
@@ -24,7 +25,9 @@ public class PacienteResponseDTO {
     private PessoaResponseDTO pessoa;
     private Boolean ativo;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
 
 }

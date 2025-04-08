@@ -1,15 +1,15 @@
 package dev.gabbriellps.gestao.hospitalar.api.service.interfaces;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
 
 import java.util.List;
 
 public interface ConsultaService {
 
 
-    List<ConsultaDTO> listarConsultas();
+    List<ConsultaResponseDTO> listarConsultas();
 
-    ConsultaDTO atualizarConsulta(Long id, ConsultaDTO consultaDTO);
+    ConsultaResponseDTO atualizarConsulta(Long id, ConsultaResponseDTO consultaResponseDTO);
 
     void excluirConsulta(Long id);
 }

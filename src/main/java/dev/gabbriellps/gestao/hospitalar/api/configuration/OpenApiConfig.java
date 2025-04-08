@@ -14,9 +14,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("RESTful API with Java 18 and Spring Boot 3")
+                        .title("Gestão Hospitalar API")
                         .version("v1")
-                        .description("Some description about your API")
+                        .description("API para gestão hospitalar")
                         .termsOfService("https://github.com/GabbrielLopes")
                         .license(
                                 new License()
