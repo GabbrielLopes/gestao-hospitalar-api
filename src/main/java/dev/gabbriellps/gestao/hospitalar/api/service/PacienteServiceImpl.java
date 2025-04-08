@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PacienteServiceImplPessoa extends PessoaAbstractService implements PacienteService {
+public class PacienteServiceImpl extends PessoaAbstractService implements PacienteService {
 
     private final PacienteRepository repository;
 

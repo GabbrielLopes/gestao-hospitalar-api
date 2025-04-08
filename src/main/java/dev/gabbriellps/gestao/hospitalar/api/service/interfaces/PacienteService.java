@@ -10,7 +10,6 @@ public interface PacienteService {
 
     List<PacienteResponseDTO> consultarPacientes();
 
-
     PacienteResponseDTO consultarPacientePorId(Long id) throws VidaPlusServiceException;
 
     PacienteResponseDTO cadastrarPaciente(PacienteRequestDTO requestDTO) throws VidaPlusServiceException;

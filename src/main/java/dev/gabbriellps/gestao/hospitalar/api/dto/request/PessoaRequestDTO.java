@@ -16,22 +16,22 @@ import java.time.LocalDate;
 @Builder
 public class PessoaRequestDTO {
 
-    @NotBlank(message = "Nome do paciente obrigatório")
+    @NotBlank(message = "Nome obrigatório")
     private String nome;
-    @NotNull(message = "Sexo do paciente obrigatório")
+    @NotNull(message = "Sexo obrigatório")
     private Sexo sexo;
-    @NotNull(message = "Data nascimento do paciente obrigatório")
+    @NotNull(message = "Data nascimento obrigatório")
     private LocalDate dataNascimento;
-    @NotBlank(message = "CPF do paciente obrigatório")
+    @NotBlank(message = "CPF obrigatório")
     private String cpf;
-    @NotBlank(message = "CEP do paciente obrigatório")
+    @NotBlank(message = "CEP obrigatório")
     private String cep;
-    @NotBlank(message = "Endereço do paciente obrigatório")
+    @NotBlank(message = "Endereço obrigatório")
     private String endereco;
     private String complemento;
-    @NotBlank(message = "Telefone do paciente obrigatório")
+    @NotBlank(message = "Telefone obrigatório")
     private String telefone;
-    @NotBlank(message = "Email do paciente obrigatório")
+    @NotBlank(message = "Email obrigatório")
     private String email;
 
 }

@@ -1,10 +1,10 @@
 package dev.gabbriellps.gestao.hospitalar.api.controller;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.request.PacienteRequestDTO;
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.handler.ErrorResponse;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
-import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.PacienteService;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalSaudeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,133 +21,133 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/pacientes")
+@RequestMapping("/profissionais-saudes")
 @RequiredArgsConstructor
-public class PacienteController {
+public class ProfissionalSaudeController {
 
-    private final PacienteService pacienteService;
+    private final ProfissionalSaudeService profissionalSaudeService;
 
 
-    @Operation(summary = "Consultar todos pacientes.")
+    @Operation(summary = "Consultar todos profissionais de saúde.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = PacienteResponseDTO.class)))
+                            array = @ArraySchema(schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class)))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(hidden = true))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping
-    public ResponseEntity<List<PacienteResponseDTO>> consultarPacientes() {
-        return ResponseEntity.ok(pacienteService.consultarPacientes());
+    public ResponseEntity<List<ProfissionalSaudeResponseDTO>> consultarProfissionais() {
+        return ResponseEntity.ok(profissionalSaudeService.consultarProfissionais());
     }
 
 
-    @Operation(summary = "Consultar paciente por ID.")
+    @Operation(summary = "Consultar profissional de saúde por ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Consulta realizada com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PacienteResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> consultarPacientePorId(
+    public ResponseEntity<ProfissionalSaudeResponseDTO> consultarProfissionalSaudePorId(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(pacienteService.consultarPacientePorId(id));
+        return ResponseEntity.ok(profissionalSaudeService.consultarProfissionalSaudePorId(id));
     }
 
-    @Operation(summary = "Cadastrar paciente.")
+    @Operation(summary = "Cadastrar profissional de saúde.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Paciente cadastrado com sucesso.",
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PacienteResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PostMapping
-    public ResponseEntity<PacienteResponseDTO> cadastrarPaciente(
-            @Valid @RequestBody PacienteRequestDTO requestDTO
+    public ResponseEntity<ProfissionalSaudeResponseDTO> cadastrarProfissionalSaude(
+            @Valid @RequestBody ProfissionalSaudeRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(pacienteService.cadastrarPaciente(requestDTO));
+        return ResponseEntity.ok(profissionalSaudeService.cadastrarProfissionalSaude(requestDTO));
     }
 
-    @Operation(summary = "Editar paciente.")
+    @Operation(summary = "Editar profissional de saúde.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Paciente editado com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Edição realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PacienteResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+                    content = {@Content(mediaType = "application/json",schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> editarPaciente(
+    public ResponseEntity<ProfissionalSaudeResponseDTO> editarProfissionalSaude(
             @PathVariable("id") Long id,
-            @Valid @RequestBody PacienteRequestDTO requestDTO
+            @Valid @RequestBody ProfissionalSaudeRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(pacienteService.editarPaciente(id, requestDTO));
+        return ResponseEntity.ok(profissionalSaudeService.editarProfissionalSaude(id, requestDTO));
     }
 
 
-    @Operation(summary = "Excluir paciente.")
+    @Operation(summary = "Excluir profissional de saúde.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Paciente excluído com sucesso.",
+            @ApiResponse(responseCode = "204", description = "Exclusão realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(hidden = true))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluirPaciente(
+    public ResponseEntity<?> excluirProfissionalSaude(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        pacienteService.inativarPaciente(id);
+        profissionalSaudeService.inativarProfissionalSaude(id);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Ativar paciente.")
+    @Operation(summary = "Ativar profissional de saúde.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Paciente ativado com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Ativação realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(hidden = true))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PostMapping("/{id}")
-    public ResponseEntity<?> ativarPaciente(
+    public ResponseEntity<?> ativarProfissionalSaude(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        pacienteService.ativarPaciente(id);
+        profissionalSaudeService.ativarProfissionalSaude(id);
         return ResponseEntity.ok().build();
     }
 

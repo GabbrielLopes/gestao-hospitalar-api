@@ -1,8 +1,12 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import jakarta.persistence.*;
 import lombok.*;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +39,9 @@ public class ProfissionalSaude {
     @Column(name = "REGISTRO_PROFISSIONAL", length = 30)
     private String registroProfissional;
 
+    @Column(name = "ATIVO", nullable = false)
+    private Boolean ativo;
+
     @OneToMany(mappedBy = "profissionalSaude", fetch = FetchType.LAZY)
     private List<Consulta> consultas;
 
@@ -51,6 +58,7 @@ public class ProfissionalSaude {
 
     @PrePersist
     protected void onCreate() {
+        ativo = true;
         if (Objects.isNull(dataCriacao)) {
             dataCriacao = LocalDateTime.now();
         }
@@ -65,5 +73,39 @@ public class ProfissionalSaude {
     }
 
 
+    public static ProfissionalSaudeResponseDTO mapToProfissionalSaudeResponseDTO(ProfissionalSaude profissionalSaude) {
+        return new ModelMapper().map(profissionalSaude, ProfissionalSaudeResponseDTO.class);
+    }
+
+    public ProfissionalSaudeResponseDTO toProfissionalSaudeResponseDTO() {
+        return ProfissionalSaudeResponseDTO.builder()
+                .id(id)
+                .pessoa(pessoa)
+                .especialidade(especialidade)
+                .registroProfissional(registroProfissional)
+                .dataCriacao(dataCriacao)
+                .dataAtualizacao(dataAtualizacao)
+                .build();
+    }
+
+    public void atualizaDadosPessoa(ProfissionalSaudeRequestDTO requestDTO) {
+        pessoa.setNome(requestDTO.getPessoa().getNome());
+        pessoa.setSexo(requestDTO.getPessoa().getSexo());
+        pessoa.setDataNascimento(requestDTO.getPessoa().getDataNascimento());
+        pessoa.setCpf(requestDTO.getPessoa().getCpf());
+        pessoa.setCep(requestDTO.getPessoa().getCep());
+        pessoa.setEndereco(requestDTO.getPessoa().getEndereco());
+        pessoa.setComplemento(requestDTO.getPessoa().getComplemento());
+        pessoa.setTelefone(requestDTO.getPessoa().getTelefone());
+        pessoa.setEmail(requestDTO.getPessoa().getEmail());
+    }
+
+    public void inativar() {
+        ativo = false;
+    }
+
+    public void ativar() {
+        ativo = true;
+    }
 
 }
