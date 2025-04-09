@@ -1,10 +1,10 @@
 package dev.gabbriellps.gestao.hospitalar.api.controller;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.handler.ErrorResponse;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
-import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalSaudeService;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,14 +25,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfissionalSaudeController {
 
-    private final ProfissionalSaudeService profissionalSaudeService;
+    private final ProfissionalService profissionalService;
 
 
     @Operation(summary = "Consultar todos profissionais de saúde.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class)))
+                            array = @ArraySchema(schema = @Schema(implementation = ProfissionalResponseDTO.class)))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
@@ -42,8 +42,8 @@ public class ProfissionalSaudeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping
-    public ResponseEntity<List<ProfissionalSaudeResponseDTO>> consultarProfissionais() {
-        return ResponseEntity.ok(profissionalSaudeService.consultarProfissionais());
+    public ResponseEntity<List<ProfissionalResponseDTO>> consultarProfissionais() {
+        return ResponseEntity.ok(profissionalService.consultarProfissionais());
     }
 
 
@@ -51,7 +51,7 @@ public class ProfissionalSaudeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(hidden = true))}),
@@ -61,17 +61,17 @@ public class ProfissionalSaudeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProfissionalSaudeResponseDTO> consultarProfissionalSaudePorId(
+    public ResponseEntity<ProfissionalResponseDTO> consultarProfissionalSaudePorId(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(profissionalSaudeService.consultarProfissionalSaudePorId(id));
+        return ResponseEntity.ok(profissionalService.consultarProfissionalSaudePorId(id));
     }
 
     @Operation(summary = "Cadastrar profissional de saúde.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
@@ -81,17 +81,17 @@ public class ProfissionalSaudeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PostMapping
-    public ResponseEntity<ProfissionalSaudeResponseDTO> cadastrarProfissionalSaude(
-            @Valid @RequestBody ProfissionalSaudeRequestDTO requestDTO
+    public ResponseEntity<ProfissionalResponseDTO> cadastrarProfissionalSaude(
+            @Valid @RequestBody ProfissionalRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(profissionalSaudeService.cadastrarProfissionalSaude(requestDTO));
+        return ResponseEntity.ok(profissionalService.cadastrarProfissionalSaude(requestDTO));
     }
 
     @Operation(summary = "Editar profissional de saúde.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Edição realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProfissionalSaudeResponseDTO.class))
+                            schema = @Schema(implementation = ProfissionalResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json",schema = @Schema(implementation = ErrorResponse.class))}),
@@ -101,11 +101,11 @@ public class ProfissionalSaudeController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ProfissionalSaudeResponseDTO> editarProfissionalSaude(
+    public ResponseEntity<ProfissionalResponseDTO> editarProfissionalSaude(
             @PathVariable("id") Long id,
-            @Valid @RequestBody ProfissionalSaudeRequestDTO requestDTO
+            @Valid @RequestBody ProfissionalRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(profissionalSaudeService.editarProfissionalSaude(id, requestDTO));
+        return ResponseEntity.ok(profissionalService.editarProfissionalSaude(id, requestDTO));
     }
 
 
@@ -126,7 +126,7 @@ public class ProfissionalSaudeController {
     public ResponseEntity<?> excluirProfissionalSaude(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        profissionalSaudeService.inativarProfissionalSaude(id);
+        profissionalService.inativarProfissionalSaude(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -147,7 +147,7 @@ public class ProfissionalSaudeController {
     public ResponseEntity<?> ativarProfissionalSaude(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        profissionalSaudeService.ativarProfissionalSaude(id);
+        profissionalService.ativarProfissionalSaude(id);
         return ResponseEntity.ok().build();
     }
 

@@ -1,7 +1,7 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -75,12 +75,12 @@ public class ProfissionalSaude {
     }
 
 
-    public static ProfissionalSaudeResponseDTO mapToProfissionalSaudeResponseDTO(ProfissionalSaude profissionalSaude) {
-        return new ModelMapper().map(profissionalSaude, ProfissionalSaudeResponseDTO.class);
+    public static ProfissionalResponseDTO mapToProfissionalSaudeResponseDTO(ProfissionalSaude profissionalSaude) {
+        return new ModelMapper().map(profissionalSaude, ProfissionalResponseDTO.class);
     }
 
-    public ProfissionalSaudeResponseDTO toProfissionalSaudeResponseDTO() {
-        return ProfissionalSaudeResponseDTO.builder()
+    public ProfissionalResponseDTO toProfissionalSaudeResponseDTO() {
+        return ProfissionalResponseDTO.builder()
                 .id(id)
                 .pessoa(pessoa)
                 .especialidade(especialidade)
@@ -90,7 +90,7 @@ public class ProfissionalSaude {
                 .build();
     }
 
-    public void atualizaDadosPessoa(ProfissionalSaudeRequestDTO requestDTO) {
+    public void atualizaDadosPessoa(ProfissionalRequestDTO requestDTO) {
         pessoa.setNome(requestDTO.getPessoa().getNome());
         pessoa.setSexo(requestDTO.getPessoa().getSexo());
         pessoa.setDataNascimento(requestDTO.getPessoa().getDataNascimento());

@@ -1,12 +1,12 @@
 package dev.gabbriellps.gestao.hospitalar.api.service;
 
-import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalSaudeRequestDTO;
-import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalSaudeResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
 import dev.gabbriellps.gestao.hospitalar.api.model.Pessoa;
 import dev.gabbriellps.gestao.hospitalar.api.model.ProfissionalSaude;
 import dev.gabbriellps.gestao.hospitalar.api.repository.ProfissionalSaudeRepository;
-import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalSaudeService;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
@@ -20,13 +20,13 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ProfissionalSaudeServiceImpl extends PessoaAbstractService implements ProfissionalSaudeService {
+public class ProfissionalServiceImpl extends PessoaAbstractService implements ProfissionalService {
 
     private final ProfissionalSaudeRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProfissionalSaudeResponseDTO> consultarProfissionais() {
+    public List<ProfissionalResponseDTO> consultarProfissionais() {
         return repository.findAll().stream()
                 .map(ProfissionalSaude::mapToProfissionalSaudeResponseDTO)
                 .toList();
@@ -34,14 +34,14 @@ public class ProfissionalSaudeServiceImpl extends PessoaAbstractService implemen
 
     @Override
     @Transactional(readOnly = true)
-    public ProfissionalSaudeResponseDTO consultarProfissionalSaudePorId(Long id) throws VidaPlusServiceException {
+    public ProfissionalResponseDTO consultarProfissionalSaudePorId(Long id) throws VidaPlusServiceException {
         return repository.findById(id).map(ProfissionalSaude::mapToProfissionalSaudeResponseDTO)
                 .orElseThrow(() -> new VidaPlusServiceException("ProfissionalSaude não encontrado", HttpStatus.NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public ProfissionalSaudeResponseDTO cadastrarProfissionalSaude(ProfissionalSaudeRequestDTO requestDTO)
+    public ProfissionalResponseDTO cadastrarProfissionalSaude(ProfissionalRequestDTO requestDTO)
             throws VidaPlusServiceException {
 
         Pessoa pessoa = cadastrarPessoa(requestDTO.getPessoa());
@@ -64,7 +64,7 @@ public class ProfissionalSaudeServiceImpl extends PessoaAbstractService implemen
 
     @Override
     @Transactional
-    public ProfissionalSaudeResponseDTO editarProfissionalSaude(Long id, ProfissionalSaudeRequestDTO requestDTO)
+    public ProfissionalResponseDTO editarProfissionalSaude(Long id, ProfissionalRequestDTO requestDTO)
             throws VidaPlusServiceException {
         ProfissionalSaude profissionalSaude = retornaProfissionalPorId(id);
 
