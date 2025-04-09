@@ -21,7 +21,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/profissionais-saudes")
+@RequestMapping("/profissionais-saude")
 @RequiredArgsConstructor
 public class ProfissionalSaudeController {
 

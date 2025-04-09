@@ -1,6 +1,7 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.PessoaResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import jakarta.persistence.*;
@@ -80,9 +81,11 @@ public class ProfissionalSaude {
     }
 
     public ProfissionalResponseDTO toProfissionalSaudeResponseDTO() {
+        PessoaResponseDTO pessoaResponseDTO = new ModelMapper().map(pessoa, PessoaResponseDTO.class);
+
         return ProfissionalResponseDTO.builder()
                 .id(id)
-                .pessoa(pessoa)
+                .pessoa(pessoaResponseDTO)
                 .especialidade(especialidade)
                 .registroProfissional(registroProfissional)
                 .dataCriacao(dataCriacao)

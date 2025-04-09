@@ -17,9 +17,10 @@ import java.time.LocalDateTime;
 public class ProfissionalResponseDTO {
 
     private Long id;
-    private Pessoa pessoa;
+    private PessoaResponseDTO pessoa;
     private Especialidade especialidade;
     private String registroProfissional;
+    private Boolean ativo;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;

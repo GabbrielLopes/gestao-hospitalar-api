@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Sexo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ public class PessoaRequestDTO {
     @NotNull(message = "Sexo obrigatório")
     private Sexo sexo;
     @NotNull(message = "Data nascimento obrigatório")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     @NotBlank(message = "CPF obrigatório")
     private String cpf;
