@@ -2,6 +2,7 @@ package dev.gabbriellps.gestao.hospitalar.api.service.interfaces;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
 import dev.gabbriellps.gestao.hospitalar.api.model.ProfissionalSaude;
 
@@ -23,5 +24,7 @@ public interface ProfissionalService {
     void ativarProfissionalSaude(Long id) throws VidaPlusServiceException;
 
     ProfissionalSaude findById(Long id) throws VidaPlusServiceException;
+
+    List<ProfissionalResponseDTO> consultarProfissionalPorFiltro(String filtro, Especialidade especialidade);
 
 }

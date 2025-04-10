@@ -2,6 +2,7 @@ package dev.gabbriellps.gestao.hospitalar.api.service;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
 import dev.gabbriellps.gestao.hospitalar.api.model.Pessoa;
 import dev.gabbriellps.gestao.hospitalar.api.model.ProfissionalSaude;
@@ -119,6 +120,14 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
         return repository.findById(id)
                 .orElseThrow(() -> new VidaPlusServiceException("Profissional não encontrado com id informado",
                         HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public List<ProfissionalResponseDTO> consultarProfissionalPorFiltro(String filtro, Especialidade especialidade) {
+        return repository.buscaProfissionaisPorFiltro(filtro, especialidade).stream()
+                .map(ProfissionalSaude::mapToProfissionalSaudeResponseDTO)
+                .toList();
     }
 
 }

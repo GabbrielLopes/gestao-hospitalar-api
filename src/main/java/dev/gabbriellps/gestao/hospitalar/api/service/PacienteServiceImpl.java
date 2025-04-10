@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -79,6 +80,17 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
     public Paciente findById(Long id) throws VidaPlusServiceException {
         return repository.findById(id)
                 .orElseThrow(() -> new VidaPlusServiceException("Paciente não encontrado com id informado",
+                        HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PacienteResponseDTO> consultarPacienteComFiltro(String filtro) throws VidaPlusServiceException {
+        return Optional.of(repository.buscaPorFiltro(filtro)
+                .stream()
+                .map(Paciente::mapToPacienteResponseDTO)
+                .toList())
+                .orElseThrow(() -> new VidaPlusServiceException("Paciente não encontrado com o parametro informado",
                         HttpStatus.NOT_FOUND));
     }
 

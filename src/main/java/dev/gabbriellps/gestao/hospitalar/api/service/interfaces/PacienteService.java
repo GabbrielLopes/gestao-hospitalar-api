@@ -22,4 +22,7 @@ public interface PacienteService {
     PacienteResponseDTO editarPaciente(Long id, PacienteRequestDTO requestDTO) throws VidaPlusServiceException;
 
     Paciente findById(Long id) throws VidaPlusServiceException;
+
+    List<PacienteResponseDTO> consultarPacienteComFiltro(String filtro) throws VidaPlusServiceException;
+
 }

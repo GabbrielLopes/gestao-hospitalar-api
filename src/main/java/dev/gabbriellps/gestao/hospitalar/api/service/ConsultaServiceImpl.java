@@ -19,7 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -107,6 +109,18 @@ public class ConsultaServiceImpl implements ConsultaService {
             log.error("Erro ao excluir consulta - ", e);
             throw new VidaPlusServiceException("Erro ao excluir consulta", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ConsultaResponseDTO> listarConsultasPorPeriodo(LocalDate dataInicio, LocalDate dataFim)
+            throws VidaPlusServiceException {
+        return Optional.of(repository.buscaConsultasPorPeriodo(dataInicio, dataFim)
+                .stream()
+                .map(Consulta::mapToConsultaResponseDTO)
+                .toList())
+                .orElseThrow(() -> new VidaPlusServiceException("Consulta não encontrada com o periodo informado",
+                        HttpStatus.NOT_FOUND));
     }
 
 }

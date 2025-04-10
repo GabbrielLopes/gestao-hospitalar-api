@@ -2,6 +2,7 @@ package dev.gabbriellps.gestao.hospitalar.api.controller;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
 import dev.gabbriellps.gestao.hospitalar.api.handler.ErrorResponse;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalService;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,27 @@ public class ProfissionalSaudeController {
         return ResponseEntity.ok(profissionalService.consultarProfissionalSaudePorId(id));
     }
 
+    @Operation(summary = "Consultar profissional por filtro(cpf, nome ou email) e por especialidade.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProfissionalResponseDTO.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "404", description = "Profissional de saúde não encontrado.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/filtro")
+    public ResponseEntity<List<ProfissionalResponseDTO>> consultarProfissionaisPorFiltro(
+            @RequestParam(value = "filtro", required = false) String filtro,
+            @RequestParam(value = "especialidade", required = false) Especialidade especialidade
+    ) throws VidaPlusServiceException {
+        return ResponseEntity.ok(profissionalService.consultarProfissionalPorFiltro(filtro, especialidade));
+    }
+
     @Operation(summary = "Cadastrar profissional de saúde.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso.",
@@ -84,7 +107,8 @@ public class ProfissionalSaudeController {
     public ResponseEntity<ProfissionalResponseDTO> cadastrarProfissionalSaude(
             @Valid @RequestBody ProfissionalRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(profissionalService.cadastrarProfissionalSaude(requestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(profissionalService.cadastrarProfissionalSaude(requestDTO));
     }
 
     @Operation(summary = "Editar profissional de saúde.")

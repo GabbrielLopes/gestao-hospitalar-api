@@ -5,6 +5,7 @@ import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ConsultaService {
@@ -21,5 +22,6 @@ public interface ConsultaService {
 
     void excluirConsulta(Long id) throws VidaPlusServiceException;
 
+    List<ConsultaResponseDTO> listarConsultasPorPeriodo(LocalDate dataInicio, LocalDate dataFim) throws VidaPlusServiceException;
 
 }

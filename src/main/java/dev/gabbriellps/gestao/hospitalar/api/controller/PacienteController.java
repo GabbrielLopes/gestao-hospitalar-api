@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class PacienteController {
 
     @Operation(summary = "Consultar paciente por ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Consulta realizada com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = PacienteResponseDTO.class))
                     }),
@@ -67,6 +68,26 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.consultarPacientePorId(id));
     }
 
+    @Operation(summary = "Consultar paciente com filtro por cpf, nome ou email.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PacienteResponseDTO.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @GetMapping("/filtro")
+    public ResponseEntity<List<PacienteResponseDTO>> consultarPacientePorId(
+            @RequestParam("filtro") String filtro
+    ) throws VidaPlusServiceException {
+        return ResponseEntity.ok(pacienteService.consultarPacienteComFiltro(filtro));
+    }
+
     @Operation(summary = "Cadastrar paciente.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Paciente cadastrado com sucesso.",
@@ -82,7 +103,7 @@ public class PacienteController {
     public ResponseEntity<PacienteResponseDTO> cadastrarPaciente(
             @Valid @RequestBody PacienteRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(pacienteService.cadastrarPaciente(requestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(pacienteService.cadastrarPaciente(requestDTO));
     }
 
     @Operation(summary = "Editar paciente.")
