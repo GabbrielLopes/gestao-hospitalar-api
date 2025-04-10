@@ -18,18 +18,13 @@ import java.time.LocalDateTime;
 public class ConsultaResponseDTO {
 
     private Long id;
-    private Paciente paciente;
-    private ProfissionalSaude profissionalSaude;
+    private PacienteResponseDTO paciente;
+    private ProfissionalResponseDTO profissionalSaude;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataHoraConsulta;
     private TipoConsulta tipo;
     private String prontuario;
     private String receitaDigital;
     private Boolean teleconsulta;
-
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime dataCriacao;
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime dataAtualizacao;
-
 
 }

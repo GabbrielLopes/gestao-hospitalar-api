@@ -1,11 +1,13 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoConsulta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -69,5 +71,12 @@ public class Consulta {
         dataAtualizacao = LocalDateTime.now();
     }
 
+    public static ConsultaResponseDTO mapToConsultaResponseDTO(Consulta consulta) {
+        return new ModelMapper().map(consulta, ConsultaResponseDTO.class);
+    }
+
+    public ConsultaResponseDTO toConsultaResponseDTO() {
+        return new ModelMapper().map(this, ConsultaResponseDTO.class);
+    }
 
 }

@@ -75,6 +75,14 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Paciente findById(Long id) throws VidaPlusServiceException {
+        return repository.findById(id)
+                .orElseThrow(() -> new VidaPlusServiceException("Paciente não encontrado com id informado",
+                        HttpStatus.NOT_FOUND));
+    }
+
+    @Override
     @Transactional
     public void inativarPaciente(Long id) throws VidaPlusServiceException {
         Paciente paciente = retornaPacientePorId(id);

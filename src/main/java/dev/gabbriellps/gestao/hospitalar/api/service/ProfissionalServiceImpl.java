@@ -113,4 +113,12 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ProfissionalSaude findById(Long id) throws VidaPlusServiceException {
+        return repository.findById(id)
+                .orElseThrow(() -> new VidaPlusServiceException("Profissional não encontrado com id informado",
+                        HttpStatus.NOT_FOUND));
+    }
+
 }

@@ -75,8 +75,6 @@ public class PacienteController {
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Paciente não encontrado.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
