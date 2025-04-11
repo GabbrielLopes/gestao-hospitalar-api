@@ -102,9 +102,9 @@ public class ConsultaServiceImpl implements ConsultaService {
     @Override
     @Transactional
     public void excluirConsulta(Long id) throws VidaPlusServiceException {
-        findConsultaOrElseThrow(id);
+        Consulta consulta = findConsultaOrElseThrow(id);
         try {
-            repository.deleteById(id);
+            repository.delete(consulta);
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao excluir consulta - ", e);
             throw new VidaPlusServiceException("Erro ao excluir consulta", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -86,7 +86,7 @@ public class ProfissionalSaudeController {
     public ResponseEntity<List<ProfissionalResponseDTO>> consultarProfissionaisPorFiltro(
             @RequestParam(value = "filtro", required = false) String filtro,
             @RequestParam(value = "especialidade", required = false) Especialidade especialidade
-    ) throws VidaPlusServiceException {
+    ) {
         return ResponseEntity.ok(profissionalService.consultarProfissionalPorFiltro(filtro, especialidade));
     }
 
@@ -133,9 +133,9 @@ public class ProfissionalSaudeController {
     }
 
 
-    @Operation(summary = "Excluir profissional de saúde.")
+    @Operation(summary = "Excluir(inativar) profissional de saúde.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Exclusão realizada com sucesso.",
+            @ApiResponse(responseCode = "204", description = "Profissional saude excluido(inativado) com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(hidden = true))
                     }),

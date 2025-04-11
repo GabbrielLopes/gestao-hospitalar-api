@@ -1,11 +1,11 @@
 package dev.gabbriellps.gestao.hospitalar.api.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import dev.gabbriellps.gestao.hospitalar.api.dto.request.ConsultaRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ExameRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ExameResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.handler.ErrorResponse;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
-import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ConsultaService;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ExameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,18 +18,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/consultas")
+@RequestMapping("/exames")
 @RequiredArgsConstructor
-public class ConsultaController {
+public class ExameController {
 
-    private final ConsultaService consultaService;
+    private final ExameService exameService;
 
-    @Operation(summary = "Listar todas as consultas.")
+    @Operation(summary = "Consultar todos os exames.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
@@ -37,17 +36,17 @@ public class ConsultaController {
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada.",
+            @ApiResponse(responseCode = "404", description = "Exame não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping
-    public ResponseEntity<List<ConsultaResponseDTO>> listarConsultas() {
-        return ResponseEntity.ok(consultaService.listarConsultas());
+    public ResponseEntity<List<ExameResponseDTO>> consultarExames() {
+        return ResponseEntity.ok(exameService.consultarExames());
     }
 
-    @Operation(summary = "Listar consulta por ID.")
+    @Operation(summary = "Consultar exame por ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
                     content = {@Content(mediaType = "application/json",
@@ -55,43 +54,21 @@ public class ConsultaController {
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada.",
+            @ApiResponse(responseCode = "404", description = "Exame não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ConsultaResponseDTO> listarConsultaPorId(
+    public ResponseEntity<ExameResponseDTO> consultarExamePorId(
             @PathVariable("id") Long id
     ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(consultaService.listarConsultaPorId(id));
-    }
-    @Operation(summary = "Listar consulta por periodo.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso.",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ConsultaResponseDTO.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-    })
-    @GetMapping("/periodo")
-    public ResponseEntity<List<ConsultaResponseDTO>> listarConsultaPorId(
-            @JsonFormat(pattern = "dd/MM/yyyy")
-            @RequestParam("dataInicio") LocalDate dataInicio,
-            @JsonFormat(pattern = "dd/MM/yyyy")
-            @RequestParam("dataFim") LocalDate dataFim
-    ) throws VidaPlusServiceException {
-        return ResponseEntity.ok(consultaService.listarConsultasPorPeriodo(dataInicio, dataFim));
+        return ResponseEntity.ok(exameService.consultarExamePorId(id));
     }
 
-    @Operation(summary = "Cadastrar consulta.")
+    @Operation(summary = "Cadastrar exame.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Consulta cadastrada com sucesso.",
+            @ApiResponse(responseCode = "201", description = "Exame cadastrado com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ConsultaResponseDTO.class))
                     }),
@@ -101,52 +78,51 @@ public class ConsultaController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PostMapping
-    public ResponseEntity<ConsultaResponseDTO> cadastrarConsulta(
-            @Valid @RequestBody ConsultaRequestDTO consultaRequestDTO
+    public ResponseEntity<ExameResponseDTO> cadastrarExame(
+            @Valid @RequestBody ExameRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(consultaService.cadastrarConsulta(consultaRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(exameService.cadastrarExame(requestDTO));
     }
 
-    @Operation(summary = "Atualizar consulta.")
+    @Operation(summary = "Editar exame.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta atualizada com sucesso.",
+            @ApiResponse(responseCode = "200", description = "Exame cadastrado com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ConsultaResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada.",
+            @ApiResponse(responseCode = "404", description = "Exame não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ConsultaResponseDTO> editarConsulta(
+    public ResponseEntity<ExameResponseDTO> editarExame(
             @PathVariable("id") Long id,
-            @Valid @RequestBody ConsultaRequestDTO consultaRequestDTO
+            @Valid @RequestBody ExameRequestDTO requestDTO
     ) throws VidaPlusServiceException {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(consultaService.atualizarConsulta(id, consultaRequestDTO));
+        return ResponseEntity.ok(exameService.editarExame(id, requestDTO));
     }
 
-    @Operation(summary = "Excluir consulta.")
+    @Operation(summary = "Excluir exame.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Consulta excluída com sucesso.",
+            @ApiResponse(responseCode = "204", description = "Exame excluido com sucesso.",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(hidden = true))
+                            schema = @Schema(implementation = ConsultaResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "400", description = "Validação dos dados de request.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada.",
+            @ApiResponse(responseCode = "404", description = "Exame não encontrado.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor.",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluirConsulta(
-            @PathVariable("id") Long id) throws VidaPlusServiceException {
-        consultaService.excluirConsulta(id);
+    public ResponseEntity<ExameResponseDTO> excluirExame(
+            @PathVariable("id") Long id
+    ) throws VidaPlusServiceException {
+        exameService.excluirExame(id);
         return ResponseEntity.noContent().build();
     }
 

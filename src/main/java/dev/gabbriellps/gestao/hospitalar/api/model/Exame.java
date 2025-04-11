@@ -1,12 +1,15 @@
 package dev.gabbriellps.gestao.hospitalar.api.model;
 
-import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoConsulta;
+import dev.gabbriellps.gestao.hospitalar.api.dto.request.ExameRequestDTO;
+import dev.gabbriellps.gestao.hospitalar.api.dto.response.ExameResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoExame;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -65,4 +68,15 @@ public class Exame {
     }
 
 
+    public ExameResponseDTO toExameResponseDTO() {
+        return new ModelMapper().map(this, ExameResponseDTO.class);
+    }
+
+    public void atualizaDadosExame(ExameRequestDTO requestDTO) {
+        this.dataHoraExame = requestDTO.getDataHoraExame();
+        this.tipo = requestDTO.getTipo();
+        if (StringUtils.isNotBlank(requestDTO.getResultado())) {
+            this.resultado = requestDTO.getResultado();
+        }
+    }
 }

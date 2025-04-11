@@ -128,9 +128,9 @@ public class PacienteController {
     }
 
 
-    @Operation(summary = "Excluir paciente.")
+    @Operation(summary = "Excluir (inativar) paciente.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Paciente excluído com sucesso.",
+            @ApiResponse(responseCode = "204", description = "Paciente excluído(inativado) com sucesso.",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(hidden = true))
                     }),
