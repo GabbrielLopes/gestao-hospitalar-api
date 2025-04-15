@@ -2,9 +2,12 @@ package dev.gabbriellps.gestao.hospitalar.api.service;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ExameRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ExameResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
+import dev.gabbriellps.gestao.hospitalar.api.model.Auditoria;
 import dev.gabbriellps.gestao.hospitalar.api.model.Exame;
 import dev.gabbriellps.gestao.hospitalar.api.repository.ExameRepository;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.AuditoriaService;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ExameService;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.PacienteService;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalService;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class ExameServiceImpl implements ExameService {
     private final ExameRepository repository;
     private final PacienteService pacienteService;
     private final ProfissionalService profissionalService;
+    private final AuditoriaService auditoriaService;
 
 
     @Override
@@ -57,7 +63,10 @@ public class ExameServiceImpl implements ExameService {
                 .build();
 
         try {
-            return repository.saveAndFlush(exame).toExameResponseDTO();
+            ExameResponseDTO response = repository.saveAndFlush(exame).toExameResponseDTO();
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+                    "Usuario cadastrou um exame - id exame: " + exame.getId()));
+            return response;
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao cadastrar exame: {}", e.getMessage());
             throw new VidaPlusServiceException("Erro ao cadastrar exame", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +85,10 @@ public class ExameServiceImpl implements ExameService {
         exame.setProfissionalSaude(profissionalService.findById(requestDTO.getProfissionalSaudeId()));
 
         try {
-            return repository.saveAndFlush(exame).toExameResponseDTO();
+            ExameResponseDTO response = repository.saveAndFlush(exame).toExameResponseDTO();
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+                    "Usuario editou um exame - id exame: " + exame.getId()));
+            return response;
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao editar exame: {}", e.getMessage());
             throw new VidaPlusServiceException("Erro ao editar exame", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,6 +103,8 @@ public class ExameServiceImpl implements ExameService {
 
         try {
             repository.delete(exame);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EXCLUSAO, getUserAcao(),
+                    "Usuario excluiu um exame - id exame: " + exame.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao excluir exame - ", e);
             throw new VidaPlusServiceException("Erro ao excluir exame", HttpStatus.INTERNAL_SERVER_ERROR);

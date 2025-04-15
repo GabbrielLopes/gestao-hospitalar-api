@@ -2,9 +2,10 @@ package dev.gabbriellps.gestao.hospitalar.api.enumeration;
 
 public enum TipoAcao {
 
-    INSERCAO,
-    ALTERACAO,
+    CADASTRO,
+    EDICAO,
     EXCLUSAO,
-    INATIVACAO
+    INATIVACAO,
+    ATIVACAO
 
 }

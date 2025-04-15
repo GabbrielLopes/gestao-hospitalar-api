@@ -42,4 +42,13 @@ public class Auditoria {
         dataHoraOperacao = LocalDateTime.now();
     }
 
+
+    public static Auditoria record(TipoAcao tipoAcao, Usuario usuario, String acao) {
+        return Auditoria.builder()
+                .tipoAcao(tipoAcao)
+                .usuario(usuario)
+                .acao(acao)
+                .build();
+    }
+
 }

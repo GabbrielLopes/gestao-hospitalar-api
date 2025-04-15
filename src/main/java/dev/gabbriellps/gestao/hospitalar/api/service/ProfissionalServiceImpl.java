@@ -3,10 +3,13 @@ package dev.gabbriellps.gestao.hospitalar.api.service;
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ProfissionalRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ProfissionalResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.Especialidade;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
+import dev.gabbriellps.gestao.hospitalar.api.model.Auditoria;
 import dev.gabbriellps.gestao.hospitalar.api.model.Pessoa;
 import dev.gabbriellps.gestao.hospitalar.api.model.ProfissionalSaude;
 import dev.gabbriellps.gestao.hospitalar.api.repository.ProfissionalSaudeRepository;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.AuditoriaService;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.ProfissionalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class ProfissionalServiceImpl extends PessoaAbstractService implements ProfissionalService {
 
     private final ProfissionalSaudeRepository repository;
+    private final AuditoriaService auditoriaService;
 
     @Override
     @Transactional(readOnly = true)
@@ -55,6 +61,8 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
                     .build();
 
             repository.saveAndFlush(profissional);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+                    "Usuario cadastrou um profissional - id profissional: " + profissional.getId()));
 
             return profissional.toProfissionalSaudeResponseDTO();
         } catch (DataAccessException | HibernateException e) {
@@ -72,7 +80,11 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
         try {
             profissionalSaude.atualizaDadosPessoa(requestDTO);
 
-            return repository.saveAndFlush(profissionalSaude).toProfissionalSaudeResponseDTO();
+            ProfissionalResponseDTO response = repository.saveAndFlush(profissionalSaude).toProfissionalSaudeResponseDTO();
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+                    "Usuario editou um profissional - id profissional: " + profissionalSaude.getId()));
+
+            return response;
         } catch (DataAccessException | HibernateException e){
             log.error("Erro ao editar profissional - ", e);
             throw new VidaPlusServiceException("Erro ao editar profissional", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,6 +99,8 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
 
         try {
             repository.saveAndFlush(profissionalSaude);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.INATIVACAO, getUserAcao(),
+                    "Usuario inativou um profissional - id profissional: " + profissionalSaude.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao inativar profissional - ", e);
             throw new VidaPlusServiceException("Erro ao excluir profissional", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,6 +122,8 @@ public class ProfissionalServiceImpl extends PessoaAbstractService implements Pr
 
         try {
             repository.saveAndFlush(profissional);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.ATIVACAO, getUserAcao(),
+                    "Usuario ativou um profissional - id profissional: " + profissional.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao ativar profissional - ", e);
             throw new VidaPlusServiceException("Erro ao ativar profissional", HttpStatus.INTERNAL_SERVER_ERROR);

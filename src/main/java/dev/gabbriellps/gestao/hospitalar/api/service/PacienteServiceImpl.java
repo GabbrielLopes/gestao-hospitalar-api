@@ -2,10 +2,13 @@ package dev.gabbriellps.gestao.hospitalar.api.service;
 
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.PacienteRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
+import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
 import dev.gabbriellps.gestao.hospitalar.api.handler.VidaPlusServiceException;
+import dev.gabbriellps.gestao.hospitalar.api.model.Auditoria;
 import dev.gabbriellps.gestao.hospitalar.api.model.Paciente;
 import dev.gabbriellps.gestao.hospitalar.api.model.Pessoa;
 import dev.gabbriellps.gestao.hospitalar.api.repository.PacienteRepository;
+import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.AuditoriaService;
 import dev.gabbriellps.gestao.hospitalar.api.service.interfaces.PacienteService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class PacienteServiceImpl extends PessoaAbstractService implements PacienteService {
 
     private final PacienteRepository repository;
+    private final AuditoriaService auditoriaService;
 
     @Override
     @Transactional(readOnly = true)
@@ -51,9 +57,10 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
                     .build();
 
             repository.saveAndFlush(paciente);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+                    "Usuario cadastrou um paciente - id paciente: " + paciente.getId()));
 
             return paciente.toPacienteResponseDTO();
-
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao cadastrar paciente - ", e);
             throw new VidaPlusServiceException("Erro ao cadastrar paciente", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -68,7 +75,10 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
         try {
             paciente.atualizaDadosPessoa(requestDTO);
 
-            return repository.saveAndFlush(paciente).toPacienteResponseDTO();
+            PacienteResponseDTO response = repository.saveAndFlush(paciente).toPacienteResponseDTO();
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+                    "Usuario editou um paciente - id paciente: " + paciente.getId()));
+            return response;
         } catch (DataAccessException | HibernateException e){
             log.error("Erro ao editar paciente - ", e);
             throw new VidaPlusServiceException("Erro ao editar paciente", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,6 +112,8 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
 
         try {
             repository.saveAndFlush(paciente);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.INATIVACAO, getUserAcao(),
+                    "Usuario inativou um paciente - id paciente: " + paciente.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao inativar paciente - ", e);
             throw new VidaPlusServiceException("Erro ao excluir paciente", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -122,6 +134,8 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
 
         try {
             repository.saveAndFlush(paciente);
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.ATIVACAO, getUserAcao(),
+                    "Usuario ativou um paciente - id paciente: " + paciente.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao ativar paciente - ", e);
             throw new VidaPlusServiceException("Erro ao ativar paciente", HttpStatus.INTERNAL_SERVER_ERROR);

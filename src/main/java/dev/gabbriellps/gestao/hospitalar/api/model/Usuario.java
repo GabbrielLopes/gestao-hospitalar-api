@@ -35,13 +35,13 @@ public class Usuario {
     private LocalDateTime dataHora;
 
     @Column(name = "DT_CRIACAO", nullable = false)
-    private LocalDate dataCriacao;
+    private LocalDateTime dataCriacao;
 
 
     @PrePersist
     protected void onCreate() {
         if (Objects.isNull(dataCriacao)) {
-            dataCriacao = LocalDate.now();
+            dataCriacao = LocalDateTime.now();
         }
         dataHora = LocalDateTime.now();
     }
@@ -49,6 +49,18 @@ public class Usuario {
     @PreUpdate
     protected void onUpdate() {
         dataHora = LocalDateTime.now();
+    }
+
+
+    // todo remover depois, metodo usado para teste
+    public static Usuario getUserAcao() {
+        return Usuario.builder()
+                .id(1L)
+                .tipoUsuario(TipoUsuario.ADMIN)
+                .ativo(Boolean.TRUE)
+                .dataHora(LocalDateTime.now())
+                .dataCriacao(LocalDateTime.now())
+                .build();
     }
 
 }
