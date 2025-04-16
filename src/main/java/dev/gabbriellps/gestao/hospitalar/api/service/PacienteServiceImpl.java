@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.service;
 
+import dev.gabbriellps.gestao.hospitalar.api.configuration.security.SecurityHelper;
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.PacienteRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.PacienteResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
@@ -21,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
-
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -30,6 +29,7 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
 
     private final PacienteRepository repository;
     private final AuditoriaService auditoriaService;
+    private final SecurityHelper securityHelper;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,7 +57,7 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
                     .build();
 
             repository.saveAndFlush(paciente);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, securityHelper.getUserLogado(),
                     "Usuario cadastrou um paciente - id paciente: " + paciente.getId()));
 
             return paciente.toPacienteResponseDTO();
@@ -76,10 +76,10 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
             paciente.atualizaDadosPessoa(requestDTO);
 
             PacienteResponseDTO response = repository.saveAndFlush(paciente).toPacienteResponseDTO();
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, securityHelper.getUserLogado(),
                     "Usuario editou um paciente - id paciente: " + paciente.getId()));
             return response;
-        } catch (DataAccessException | HibernateException e){
+        } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao editar paciente - ", e);
             throw new VidaPlusServiceException("Erro ao editar paciente", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -97,9 +97,9 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
     @Transactional(readOnly = true)
     public List<PacienteResponseDTO> consultarPacienteComFiltro(String filtro) throws VidaPlusServiceException {
         return Optional.of(repository.buscaPorFiltro(filtro)
-                .stream()
-                .map(Paciente::mapToPacienteResponseDTO)
-                .toList())
+                        .stream()
+                        .map(Paciente::mapToPacienteResponseDTO)
+                        .toList())
                 .orElseThrow(() -> new VidaPlusServiceException("Paciente não encontrado com o parametro informado",
                         HttpStatus.NOT_FOUND));
     }
@@ -112,7 +112,7 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
 
         try {
             repository.saveAndFlush(paciente);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.INATIVACAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.INATIVACAO, securityHelper.getUserLogado(),
                     "Usuario inativou um paciente - id paciente: " + paciente.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao inativar paciente - ", e);
@@ -134,7 +134,7 @@ public class PacienteServiceImpl extends PessoaAbstractService implements Pacien
 
         try {
             repository.saveAndFlush(paciente);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.ATIVACAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.ATIVACAO, securityHelper.getUserLogado(),
                     "Usuario ativou um paciente - id paciente: " + paciente.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao ativar paciente - ", e);

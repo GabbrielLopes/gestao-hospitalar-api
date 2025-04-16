@@ -49,9 +49,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     private static void validaUsuarioInvalido(UserDetails usuario, HttpServletResponse res) throws IOException {
         if (Objects.isNull(usuario)) {
             res.resetBuffer();
-            res.setStatus(HttpStatus.FORBIDDEN.value());
+            res.setStatus(HttpStatus.UNAUTHORIZED.value());
             res.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            String retorno = new ErrorResponse("Usuario não autenticado", HttpStatus.FORBIDDEN).toString();
+            String retorno = new ErrorResponse("Usuario não autenticado", HttpStatus.UNAUTHORIZED).toString();
             res.getOutputStream().print(retorno);
             res.flushBuffer();
         }

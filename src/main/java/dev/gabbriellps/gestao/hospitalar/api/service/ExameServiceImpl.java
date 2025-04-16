@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.service;
 
+import dev.gabbriellps.gestao.hospitalar.api.configuration.security.SecurityHelper;
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ExameRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ExameResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
@@ -21,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,7 @@ public class ExameServiceImpl implements ExameService {
     private final PacienteService pacienteService;
     private final ProfissionalService profissionalService;
     private final AuditoriaService auditoriaService;
+    private final SecurityHelper securityHelper;
 
 
     @Override
@@ -64,7 +64,7 @@ public class ExameServiceImpl implements ExameService {
 
         try {
             ExameResponseDTO response = repository.saveAndFlush(exame).toExameResponseDTO();
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, securityHelper.getUserLogado(),
                     "Usuario cadastrou um exame - id exame: " + exame.getId()));
             return response;
         } catch (DataAccessException | HibernateException e) {
@@ -86,7 +86,7 @@ public class ExameServiceImpl implements ExameService {
 
         try {
             ExameResponseDTO response = repository.saveAndFlush(exame).toExameResponseDTO();
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, securityHelper.getUserLogado(),
                     "Usuario editou um exame - id exame: " + exame.getId()));
             return response;
         } catch (DataAccessException | HibernateException e) {
@@ -103,7 +103,7 @@ public class ExameServiceImpl implements ExameService {
 
         try {
             repository.delete(exame);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EXCLUSAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EXCLUSAO, securityHelper.getUserLogado(),
                     "Usuario excluiu um exame - id exame: " + exame.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao excluir exame - ", e);

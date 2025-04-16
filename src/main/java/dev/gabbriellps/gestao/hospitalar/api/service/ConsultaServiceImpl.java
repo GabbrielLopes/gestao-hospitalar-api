@@ -1,5 +1,6 @@
 package dev.gabbriellps.gestao.hospitalar.api.service;
 
+import dev.gabbriellps.gestao.hospitalar.api.configuration.security.SecurityHelper;
 import dev.gabbriellps.gestao.hospitalar.api.dto.request.ConsultaRequestDTO;
 import dev.gabbriellps.gestao.hospitalar.api.dto.response.ConsultaResponseDTO;
 import dev.gabbriellps.gestao.hospitalar.api.enumeration.TipoAcao;
@@ -24,8 +25,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static dev.gabbriellps.gestao.hospitalar.api.model.Usuario.getUserAcao;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,7 @@ public class ConsultaServiceImpl implements ConsultaService {
     private final PacienteService pacienteService;
     private final ProfissionalService profissionalService;
     private final AuditoriaService auditoriaService;
+    private final SecurityHelper securityHelper;
 
     @Override
     @Transactional(readOnly = true)
@@ -68,7 +68,7 @@ public class ConsultaServiceImpl implements ConsultaService {
 
         try {
             repository.saveAndFlush(consulta);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.CADASTRO, securityHelper.getUserLogado(),
                     "Usuario cadastrou uma consulta - id consulta: " + consulta.getId()));
         } catch (Exception e) {
             log.error("Erro ao cadastrar consulta - ", e);
@@ -92,7 +92,7 @@ public class ConsultaServiceImpl implements ConsultaService {
 
         try {
             repository.saveAndFlush(consulta);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EDICAO, securityHelper.getUserLogado(),
                     "Usuario editou uma consulta - id consulta: " + consulta.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao atualizar consulta - ", e);
@@ -113,7 +113,7 @@ public class ConsultaServiceImpl implements ConsultaService {
         Consulta consulta = findConsultaOrElseThrow(id);
         try {
             repository.delete(consulta);
-            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EXCLUSAO, getUserAcao(),
+            auditoriaService.saveAuditoria(Auditoria.record(TipoAcao.EXCLUSAO, securityHelper.getUserLogado(),
                     "Usuario excluiu uma consulta - id consulta: " + consulta.getId()));
         } catch (DataAccessException | HibernateException e) {
             log.error("Erro ao excluir consulta - ", e);
