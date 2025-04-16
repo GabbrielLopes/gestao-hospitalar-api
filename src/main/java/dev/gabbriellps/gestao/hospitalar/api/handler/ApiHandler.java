@@ -98,12 +98,7 @@ public class ApiHandler extends ResponseEntityExceptionHandler implements Serial
 		log.error(e.getMessage(),e);
 		return montaMsg(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	/**
-	 * Erro acesso
-	 * @param e
-	 * @return
-	 */
+
 	@ExceptionHandler(AccessDeniedException.class)
 	@ResponseStatus(code=HttpStatus.UNAUTHORIZED)
 	public ResponseEntity<ErrorResponse> handle(AccessDeniedException e){

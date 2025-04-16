@@ -15,3 +15,8 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}
