@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -64,6 +65,14 @@ public class ApiHandler extends ResponseEntityExceptionHandler implements Serial
 		} 
 		return montaMsg(e.getMessage(), e.getStatus()); 
 	}
+
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ErrorResponse> handle(BadCredentialsException e){
+
+		return montaMsg(e.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+
+
 
 
 	/**
