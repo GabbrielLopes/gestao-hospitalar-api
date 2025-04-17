@@ -20,6 +20,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -56,7 +58,7 @@ class PacienteServiceImplTest {
     private PessoaRequestDTO pessoaRequestDTO;
 
     @BeforeEach
-    void setUp() throws VidaPlusServiceException {
+    void testsetUp() throws VidaPlusServiceException {
         when(securityHelper.getUserLogado()).thenReturn(Usuario.builder()
                         .id(1L)
                         .login("userTest")
@@ -96,7 +98,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void consultarPacientes() {
+    void testConsultarPacientes() {
         // Mockando o retorno do repositório
         when(repository.findAll()).thenReturn(Collections.singletonList(paciente));
 
@@ -110,7 +112,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void consultarPacientePorId() throws VidaPlusServiceException {
+    void testConsultarPacientePorId() throws VidaPlusServiceException {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
 
         var pacienteResponse = service.consultarPacientePorId(1L);
@@ -120,7 +122,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void cadastrarPaciente() throws VidaPlusServiceException {
+    void testCadastrarPaciente() throws VidaPlusServiceException {
 
         var pacienteResponse = service.cadastrarPaciente(pacienteRequestDTO);
 
@@ -130,7 +132,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void cadastrarPacienteComDadosPessoaInvalido() {
+    void testCadastrarPacienteComDadosPessoaInvalido() {
         pacienteRequestDTO.getPessoa().setCpf(null);
 
         assertThrows(VidaPlusServiceException.class, () -> {
@@ -139,7 +141,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void cadastrarPacienteError() {
+    void testCadastrarPacienteError() {
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenThrow(DataIntegrityViolationException.class);
 
         assertThrows(VidaPlusServiceException.class, () -> {
@@ -148,7 +150,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void editarPaciente() throws VidaPlusServiceException {
+    void testEditarPaciente() throws VidaPlusServiceException {
 
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenReturn(paciente);
@@ -162,7 +164,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void editarPacienteError() {
+    void testEditarPacienteError() {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenThrow(DataIntegrityViolationException.class);
 
@@ -173,7 +175,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void findById() throws VidaPlusServiceException {
+    void testFindById() throws VidaPlusServiceException {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
 
         var pacienteResponse = service.findById(1L);
@@ -183,7 +185,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void consultarPacienteComFiltroCpf() throws VidaPlusServiceException {
+    void testConsultarPacienteComFiltroCpf() throws VidaPlusServiceException {
         when(repository.buscaPorFiltro(Mockito.anyString())).thenReturn(Collections.singletonList(paciente));
 
         var pacientes = service.consultarPacienteComFiltro("1234567");
@@ -194,7 +196,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void consultarPacienteComFiltroNome() throws VidaPlusServiceException {
+    void testConsultarPacienteComFiltroNome() throws VidaPlusServiceException {
         when(repository.buscaPorFiltro(Mockito.anyString())).thenReturn(Collections.singletonList(paciente));
 
         var pacientes = service.consultarPacienteComFiltro("Nome");
@@ -205,7 +207,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void consultarPacienteComFiltroEmail() throws VidaPlusServiceException {
+    void testConsultarPacienteComFiltroEmail() throws VidaPlusServiceException {
         when(repository.buscaPorFiltro(Mockito.anyString())).thenReturn(Collections.singletonList(paciente));
 
         var pacientes = service.consultarPacienteComFiltro("email.teste");
@@ -216,7 +218,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void inativarPaciente() throws VidaPlusServiceException {
+    void testInativarPaciente() throws VidaPlusServiceException {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
 
         service.inativarPaciente(1L);
@@ -226,7 +228,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void inativarPacienteError() {
+    void testInativarPacienteError() {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenThrow(DataIntegrityViolationException.class);
 
@@ -236,7 +238,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void ativarPaciente() throws VidaPlusServiceException {
+    void testAtivarPaciente() throws VidaPlusServiceException {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenReturn(paciente);
 
@@ -247,7 +249,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void ativarPacienteInexistente() {
+    void testAtivarPacienteInexistente() {
         when(repository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         assertThrows(VidaPlusServiceException.class, () -> {
@@ -256,7 +258,7 @@ class PacienteServiceImplTest {
     }
 
     @Test
-    void ativarPacienteError() {
+    void testAtivarPacienteError() {
         when(repository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(paciente));
         when(repository.saveAndFlush(Mockito.any(Paciente.class))).thenThrow(DataIntegrityViolationException.class);
 

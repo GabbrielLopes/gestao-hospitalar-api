@@ -21,6 +21,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -57,7 +59,7 @@ class ProfissionalServiceImplTest {
     private Usuario usuario;
 
     @BeforeEach
-    void setUp() throws VidaPlusServiceException {
+    void testsetUp() throws VidaPlusServiceException {
 
         when(securityHelper.getUserLogado()).thenReturn(Usuario.builder()
                 .id(1L)
@@ -105,7 +107,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void consultarProfissionais() {
+    void testConsultarProfissionais() {
         when(repository.findAll()).thenReturn(Collections.singletonList(profissionalSaude));
 
         var response = service.consultarProfissionais();
@@ -115,7 +117,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void consultarProfissionalSaudePorId() throws VidaPlusServiceException {
+    void testConsultarProfissionalSaudePorId() throws VidaPlusServiceException {
         when(repository.findById(1L)).thenReturn(java.util.Optional.of(profissionalSaude));
 
         var response = service.consultarProfissionalSaudePorId(1L);
@@ -125,7 +127,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void cadastrarProfissionalSaude() throws VidaPlusServiceException {
+    void testCadastrarProfissionalSaude() throws VidaPlusServiceException {
         when(repository.saveAndFlush(Mockito.any())).thenReturn(profissionalSaude);
 
         var response = service.cadastrarProfissionalSaude(profissionalRequestDTO);
@@ -136,7 +138,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void cadastrarProfissionalSaudeError() {
+    void testCadastrarProfissionalSaudeError() {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
         when(repository.saveAndFlush(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
@@ -146,7 +148,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void editarProfissionalSaude() throws VidaPlusServiceException {
+    void testEditarProfissionalSaude() throws VidaPlusServiceException {
         profissionalRequestDTO.setRegistroProfissional("654321");
 
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
@@ -164,7 +166,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void editarProfissionalSaudeError() {
+    void testEditarProfissionalSaudeError() {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
         when(repository.saveAndFlush(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
@@ -174,7 +176,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void inativarProfissionalSaude() throws VidaPlusServiceException {
+    void testInativarProfissionalSaude() throws VidaPlusServiceException {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
 
         service.inativarProfissionalSaude(1L);
@@ -184,7 +186,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void inativarProfissionalSaudeError()  {
+    void testInativarProfissionalSaudeError()  {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
         when(repository.saveAndFlush(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
@@ -194,7 +196,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void ativarProfissionalSaude() throws VidaPlusServiceException {
+    void testAtivarProfissionalSaude() throws VidaPlusServiceException {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
 
         service.ativarProfissionalSaude(1L);
@@ -204,7 +206,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void ativarProfissionalSaudeError() {
+    void testAtivarProfissionalSaudeError() {
         when(repository.findById(1L)).thenReturn(Optional.of(profissionalSaude));
         when(repository.saveAndFlush(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
@@ -214,7 +216,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void findById() throws VidaPlusServiceException {
+    void testFindById() throws VidaPlusServiceException {
         when(repository.findById(1L)).thenReturn(java.util.Optional.of(profissionalSaude));
 
         var response = service.findById(1L);
@@ -224,7 +226,7 @@ class ProfissionalServiceImplTest {
     }
 
     @Test
-    void consultarProfissionalPorFiltro() {
+    void testConsultarProfissionalPorFiltro() {
         when(repository.buscaProfissionaisPorFiltro(Mockito.anyString(), Mockito.any()))
                 .thenReturn(Collections.singletonList(profissionalSaude));
 
